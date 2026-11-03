@@ -37,8 +37,14 @@ public class VentanaPrincipal extends JFrame {
     /*Constructor de la ventana: Se ejecuta cuando se crea un objeto VentanaPrincipal, primero configura las propiedades generales de la ventana
     y después construye todos sus componentes gráficos*/
     public VentanaPrincipal() {
+
+        //define el título que aparece en la parte superior
         super("Agenda Telefónica MVC");
+
+        //configura el tamaño, ubicación y comportamiento de la ventana
         configurarVentana();
+
+        //construye y organiza los componentes de la interfaz.
         inicializarComponentes();
 
         btnAgregar.setEnabled(true);
