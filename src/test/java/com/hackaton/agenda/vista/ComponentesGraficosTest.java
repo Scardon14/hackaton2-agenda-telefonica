@@ -47,8 +47,8 @@ class ComponentesGraficosTest {
         ComponentesGraficos.PanelGestion panel = new ComponentesGraficos.PanelGestion();
 
         List<Contacto> lista = Arrays.asList(
-                new Contacto("Ana", "Alonso", "+57 300 111 2222"),
-                new Contacto("Carlos", "Gómez", "3103334444")
+                new Contacto("Ana", "Alonso", "+34 600 111 222"),
+                new Contacto("Carlos", "Gómez", "600333444")
         );
 
         panel.actualizarTabla(lista);
@@ -57,12 +57,12 @@ class ComponentesGraficosTest {
         String[] contactoUno = panel.obtenerContactoDeFila(0);
         assertEquals("Ana", contactoUno[0]);
         assertEquals("Alonso", contactoUno[1]);
-        assertEquals("+57 300 111 2222", contactoUno[2]);
+        assertEquals("+34 600 111 222", contactoUno[2]);
 
         String[] contactoDos = panel.obtenerContactoDeFila(1);
         assertEquals("Carlos", contactoDos[0]);
         assertEquals("Gómez", contactoDos[1]);
-        assertEquals("3103334444", contactoDos[2]);
+        assertEquals("600333444", contactoDos[2]);
     }
 
     @Test
