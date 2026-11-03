@@ -2,66 +2,71 @@
 package com.hackaton.agenda.modelo;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class Contacto {
 
-    // Atributos
     private String nombre;
     private String apellido;
     private String telefono;
 
-    // Expresión regular para validar el teléfono
-    private static final String REGEX_TELEFONO =
-            "^(\\+\\d{1,3}\\s?)?\\d{3}\\s?\\d{3}\\s?\\d{3}$";
+    // Validación de teléfonos colombianos
+    public static final String REGEX_TELEFONO =
+            "^(\\+57[\\s-]?)?([1-9]\\d{2}[\\s-]?\\d{3}[\\s-]?\\d{4}|[1-9]\\d{9})$";
 
-    // Constructor vacío
+    private static final Pattern PATTERN_TELEFONO =
+            Pattern.compile(REGEX_TELEFONO);
+
     public Contacto() {
     }
 
-    // Constructor con parámetros
     public Contacto(String nombre, String apellido, String telefono) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.telefono = telefono;
+        setNombre(nombre);
+        setApellido(apellido);
+        setTelefono(telefono);
     }
-
-    // Getter del nombre
-    public String getNombre() {
-        return nombre;
-    }
-
-    // Setter del nombre
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    // Getter del apellido
+    // Obtener apellido
     public String getApellido() {
         return apellido;
     }
 
-    // Setter del apellido
+    // Modificar apellido
     public void setApellido(String apellido) {
-        this.apellido = apellido;
+        if (apellido == null || apellido.trim().isEmpty()) {
+            throw new IllegalArgumentException("El apellido no puede estar vacío");
+        }
+        this.apellido = apellido.trim();
     }
 
-    // Getter del teléfono
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío");
+        }
+        this.nombre = nombre.trim();
+    }
+
+
+
+
+
     public String getTelefono() {
         return telefono;
     }
 
-    // Setter del teléfono
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
-    // Validar teléfono
     public static boolean validarTelefono(String telefono) {
         return telefono != null &&
-                telefono.trim().matches(REGEX_TELEFONO);
+                PATTERN_TELEFONO.matcher(telefono.trim()).matches();
     }
 
-    // Dos contactos son iguales si tienen el mismo nombre y apellido
+    // Comparar contactos por nombre y apellido
     @Override
     public boolean equals(Object objeto) {
         if (this == objeto) return true;

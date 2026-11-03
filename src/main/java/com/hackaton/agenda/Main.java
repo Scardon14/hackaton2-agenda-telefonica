@@ -1,8 +1,8 @@
-package com.hackathon.agenda;
+package com.hackaton.agenda;
 
-import com.hackathon.agenda.controlador.AgendaControlador;
-import com.hackathon.agenda.modelo.Agenda;
-import com.hackathon.agenda.vista.VentanaPrincipal;
+import com.hackaton.agenda.controlador.AgendaControlador;
+import com.hackaton.agenda.modelo.Agenda;
+import com.hackaton.agenda.vista.VentanaPrincipal;
 
 import javax.swing.*;
 
@@ -16,9 +16,7 @@ public class Main {
             }
 
             Agenda agendaModelo = new Agenda(10);
-
             VentanaPrincipal vista = new VentanaPrincipal();
-
             new AgendaControlador(agendaModelo, vista);
 
             vista.setVisible(true);
