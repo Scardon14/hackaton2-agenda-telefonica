@@ -93,12 +93,12 @@ public class ComponentesGraficos {
         private void construirPanelBusqueda() {
             JPanel panelBusqueda = new JPanel(new GridBagLayout());
             panelBusqueda.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(225, 228, 232)),
+                    BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(200, 205, 210)),
                     new EmptyBorder(0, 0, 10, 0)
             ));
 
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(4, 4, 4, 4);
+            gbc.insets = new Insets(4, 6, 4, 6); // Margenes un poco más holgados
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
             gbc.gridx = 0;
@@ -107,9 +107,10 @@ public class ComponentesGraficos {
             JLabel lblNom = crearEtiqueta("Nombre:");
             panelBusqueda.add(lblNom, gbc);
 
+            // Aumentamos el tamaño inicial y el peso horizontal para que se expandan
             gbc.gridx = 1;
-            gbc.weightx = 0.5;
-            txtBuscarNombre = campoTexto(10);
+            gbc.weightx = 1.0; // Ocupa espacio proporcionalmente
+            txtBuscarNombre = campoTexto(14); // Ampliado de 10 a 14 columnas
             txtBuscarNombre.setToolTipText("Escribe el nombre a buscar");
             panelBusqueda.add(txtBuscarNombre, gbc);
 
@@ -119,8 +120,8 @@ public class ComponentesGraficos {
             panelBusqueda.add(lblApe, gbc);
 
             gbc.gridx = 3;
-            gbc.weightx = 0.5;
-            txtBuscarApellido = campoTexto(10);
+            gbc.weightx = 1.0; // Ocupa espacio proporcionalmente
+            txtBuscarApellido = campoTexto(14); // Ampliado de 10 a 14 columnas
             txtBuscarApellido.setToolTipText("Escribe el apellido a buscar");
             panelBusqueda.add(txtBuscarApellido, gbc);
 
@@ -129,6 +130,8 @@ public class ComponentesGraficos {
             btnBuscar = crearBoton("Buscar");
             btnBuscar.setBackground(COLOR_PRIMARIO);
             btnBuscar.setForeground(Color.WHITE);
+            btnBuscar.setOpaque(true);
+            btnBuscar.setBorderPainted(false);
             panelBusqueda.add(btnBuscar, gbc);
 
             gbc.gridx = 5;
@@ -184,6 +187,8 @@ public class ComponentesGraficos {
             btnEliminar = crearBoton("Eliminar Contacto");
             btnEliminar.setBackground(COLOR_PELIGRO);
             btnEliminar.setForeground(Color.WHITE);
+            btnEliminar.setOpaque(true);
+            btnEliminar.setBorderPainted(false);
             btnEliminar.setToolTipText("Selecciona una fila en la tabla para borrarla");
             panelBotonEliminar.add(btnEliminar);
 

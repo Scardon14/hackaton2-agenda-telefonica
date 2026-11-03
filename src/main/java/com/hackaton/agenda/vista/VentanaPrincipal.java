@@ -14,8 +14,8 @@ gráfica y permitir que el controlador acceda a sus componentes.No contiene regl
 Esa responsabilidad corresponde al controlador.*/
 public class VentanaPrincipal extends JFrame {
 
-  /*atributos que usara nuestra ventana, modificador de acceso private porque estos atributos solamente pueden ser accedidos directamente desde la propia clase
-    esto es encapsulamiento*/
+    /*atributos que usara nuestra ventana, modificador de acceso private porque estos atributos solamente pueden ser accedidos directamente desde la propia clase
+      esto es encapsulamiento*/
     //para campos de texto
     private JTextField txtNombre = new JTextField();
     private JTextField txtApellido = new JTextField();
@@ -46,6 +46,15 @@ public class VentanaPrincipal extends JFrame {
 
         //construye y organiza los componentes de la interfaz.
         inicializarComponentes();
+
+        btnAgregar.setEnabled(true);
+        btnModificar.setEnabled(true);
+        btnLimpiar.setEnabled(true);
+        if (panelGestion != null) {
+            if (panelGestion.getBtnEliminar() != null) panelGestion.getBtnEliminar().setEnabled(true);
+            if (panelGestion.getBtnBuscar() != null) panelGestion.getBtnBuscar().setEnabled(true);
+            if (panelGestion.getBtnMostrarTodos() != null) panelGestion.getBtnMostrarTodos().setEnabled(true);
+        }
     }
     /*configuracion de la ventana, configura las propiedades principales del JFrame: acción al cerrar la ventana, tamaño inicial, tamaño mínimo permitido, ubicación centrada
     en la pantalla, distribución general mediante BorderLayout.*/
@@ -150,82 +159,85 @@ public class VentanaPrincipal extends JFrame {
     /*construye el formulario para registrar y modificar contactos, contiene:campo de nombre, campo de apellido, campo de teléfono, boton añadir, boton modificar telefono
    boton limpiar formulario, retorna un JPanel que se incorpora a la ventana principal*/
     private JPanel construirPanelRegistro() {
-
         // panel principal del formulario
-        JPanel panel = new JPanel(
-                new BorderLayout(15, 20)
-        );
+        JPanel panel = new JPanel(new BorderLayout(15, 20));
 
-        // agrega un borde con ttulo y margenes internos
-        panel.setBorder(BorderFactory.createCompoundBorder(new TitledBorder(BorderFactory.createLineBorder(new Color(200, 205, 210), 1, true),
-                        " Registro de contactos ", TitledBorder.LEFT, TitledBorder.TOP, ComponentesGraficos.FUENTE_TITULO, ComponentesGraficos.COLOR_PRIMARIO),
+        // agrega un borde con título y márgenes internos
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                new TitledBorder(BorderFactory.createLineBorder(new Color(200, 205, 210), 1, true),
+                        " Registro de contactos ", TitledBorder.LEFT, TitledBorder.TOP,
+                        ComponentesGraficos.FUENTE_TITULO, ComponentesGraficos.COLOR_PRIMARIO),
                 new EmptyBorder(25, 20, 25, 20))
         );
 
-        //etiquetas y campos de texto
-        // GridLayout organiza los componentes en 3 filas y 2 columnas
-        JPanel panelCampos = new JPanel(new GridLayout(3, 2, 10, 20));
+        // Panel de campos con GridBagLayout para controlar perfectamente el alto de los inputs
+        JPanel panelCampos = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // etiquetas que identifican cada campo
+        // Etiquetas
         JLabel lblNombre = new JLabel("Nombre:");
         JLabel lblApellido = new JLabel("Apellido:");
         JLabel lblTelefono = new JLabel("Teléfono:");
 
-        // aplicamos la fuente definida en ComponentesGraficos
         lblNombre.setFont(ComponentesGraficos.FUENTE_NEGRILLA);
         lblApellido.setFont(ComponentesGraficos.FUENTE_NEGRILLA);
         lblTelefono.setFont(ComponentesGraficos.FUENTE_NEGRILLA);
 
-        // aplicamos el estilo general a los campos
+        // Estilos de los campos de texto
         txtNombre.setFont(ComponentesGraficos.FUENTE_GENERAL);
         txtApellido.setFont(ComponentesGraficos.FUENTE_GENERAL);
         txtTelefono.setFont(ComponentesGraficos.FUENTE_GENERAL);
 
-        // textos de ayuda que aparecen al pasar el cursor.
         txtNombre.setToolTipText("Ingrese el nombre del contacto");
         txtApellido.setToolTipText("Ingrese el apellido del contacto");
         txtTelefono.setToolTipText("Ingrese el número de teléfono");
 
-        // Agregamos las etiquetas y sus respectivos campos.
-        panelCampos.add(lblNombre);
-        panelCampos.add(txtNombre);
+        // Fila 0: Nombre
+        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.0;
+        panelCampos.add(lblNombre, gbc);
+        gbc.gridx = 1; gbc.weightx = 1.0;
+        panelCampos.add(txtNombre, gbc);
 
-        panelCampos.add(lblApellido);
-        panelCampos.add(txtApellido);
+        // Fila 1: Apellido
+        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.0;
+        panelCampos.add(lblApellido, gbc);
+        gbc.gridx = 1; gbc.weightx = 1.0;
+        panelCampos.add(txtApellido, gbc);
 
-        panelCampos.add(lblTelefono);
-        panelCampos.add(txtTelefono);
+        // Fila 2: Teléfono
+        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.0;
+        panelCampos.add(lblTelefono, gbc);
+        gbc.gridx = 1; gbc.weightx = 1.0;
+        panelCampos.add(txtTelefono, gbc);
 
-        //botones del formulario
-        //organiza los tres botones verticalmente
+        // Botones del formulario
         JPanel panelBotones = new JPanel(new GridLayout(3, 1, 0, 12));
 
-        //establece la fuente de los botones
         btnAgregar.setFont(ComponentesGraficos.FUENTE_NEGRILLA);
         btnModificar.setFont(ComponentesGraficos.FUENTE_NEGRILLA);
         btnLimpiar.setFont(ComponentesGraficos.FUENTE_NEGRILLA);
 
-        //personaliza el botón de agregar
         btnAgregar.setBackground(ComponentesGraficos.COLOR_PRIMARIO);
         btnAgregar.setForeground(Color.WHITE);
+        btnAgregar.setOpaque(true);
+        btnAgregar.setBorderPainted(false);
         btnAgregar.setFocusPainted(false);
 
-        //evita el borde de enfoque visual en los otros botones
+        btnModificar.setOpaque(true);
         btnModificar.setFocusPainted(false);
+        btnLimpiar.setOpaque(true);
         btnLimpiar.setFocusPainted(false);
 
-        //agrega los botones al panel
         panelBotones.add(btnAgregar);
         panelBotones.add(btnModificar);
         panelBotones.add(btnLimpiar);
 
-        //los campos se ubican en el centro
-        panel.add(panelCampos, BorderLayout.CENTER);
-
-        //los botones se ubican en la parte inferior
+        // Ubicaciones finales en el panel principal
+        panel.add(panelCampos, BorderLayout.NORTH); // Usando NORTH para que no se expandan hacia abajo
         panel.add(panelBotones, BorderLayout.SOUTH);
 
-        //retorna el formulario terminado
         return panel;
     }
 
@@ -242,7 +254,7 @@ public class VentanaPrincipal extends JFrame {
         panel.setBackground(new Color(245, 247, 250));
 
         //mensaje inicial que aparece al abrir la aplicacion
-        lblMensajeEstado = new JLabel("SBienvenid@ a tu agenda de contactos!");
+        lblMensajeEstado = new JLabel("Bienvenid@ a tu agenda de contactos!");
         lblMensajeEstado.setFont(ComponentesGraficos.FUENTE_NEGRILLA);
         lblMensajeEstado.setForeground(new Color(90, 95, 100));
         // Ubica el mensaje a la izquierda.
@@ -420,4 +432,13 @@ public class VentanaPrincipal extends JFrame {
         return lblMensajeEstado;
     }
 
+    /* Obtiene el texto de búsqueda del nombre */
+    public String getBuscarNombre() {
+        return panelGestion.getTxtBuscarNombre().getText().trim();
+    }
+
+    /* Obtiene el texto de búsqueda del apellido */
+    public String getBuscarApellido() {
+        return panelGestion.getTxtBuscarApellido().getText().trim();
+    }
 }

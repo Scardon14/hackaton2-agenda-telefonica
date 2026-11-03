@@ -74,7 +74,34 @@ public class Agenda {
                 .thenComparing(Contacto::getApellido, String.CASE_INSENSITIVE_ORDER));
         return copia;
     }
+    /**
+     * Busca y retorna una lista de contactos que coincidan con el nombre, apellido o ambos.
+     */
+    public List<Contacto> buscarContactos(String nombre, String apellido) {
+        boolean nombreVacio = estaVacio(nombre);
+        boolean apellidoVacio = estaVacio(apellido);
 
+        if (nombreVacio && apellidoVacio) {
+            throw new IllegalArgumentException("Escribe al menos el nombre o el apellido para buscar");
+        }
+
+        List<Contacto> resultados = new ArrayList<>();
+        for (Contacto c : contactos) {
+            boolean coincideNombre = nombreVacio || c.getNombre().trim().toLowerCase().contains(nombre.trim().toLowerCase());
+            boolean coincideApellido = apellidoVacio || c.getApellido().trim().toLowerCase().contains(apellido.trim().toLowerCase());
+
+            // Si cumple con los criterios de búsqueda, lo agrega a la lista de resultados
+            if (coincideNombre && coincideApellido) {
+                resultados.add(c);
+            }
+        }
+
+        if (resultados.isEmpty()) {
+            throw new IllegalArgumentException("No se encontró ningún contacto con esos datos");
+        }
+
+        return resultados;
+    }
     /** Devuelve el teléfono del contacto o lanza excepción si no existe. */
     public String buscarContacto(String nombre, String apellido) {
         return obtenerContacto(nombre, apellido).getTelefono();
@@ -113,16 +140,23 @@ public class Agenda {
     /* Busca recorriendo la lista y comparando sin mayúsculas.     */
 
     private Contacto obtenerContacto(String nombre, String apellido) {
-        if (estaVacio(nombre) || estaVacio(apellido)) {
-            throw new IllegalArgumentException("Escribe nombre y apellido para buscar");
+        boolean nombreVacio = estaVacio(nombre);
+        boolean apellidoVacio = estaVacio(apellido);
+
+        if (nombreVacio && apellidoVacio) {
+            throw new IllegalArgumentException("Escribe al menos el nombre o el apellido para buscar");
         }
+
         for (Contacto c : contactos) {
-            if (c.getNombre().trim().equalsIgnoreCase(nombre.trim())
-                    && c.getApellido().trim().equalsIgnoreCase(apellido.trim())) {
+            boolean coincideNombre = nombreVacio || c.getNombre().trim().equalsIgnoreCase(nombre.trim());
+            boolean coincideApellido = apellidoVacio || c.getApellido().trim().equalsIgnoreCase(apellido.trim());
+
+            // Coincide si cumple con el criterio ingresado
+            if (coincideNombre && coincideApellido) {
                 return c;
             }
         }
-        throw new IllegalArgumentException("No existe el contacto " + nombre.trim() + " " + apellido.trim());
+        throw new IllegalArgumentException("No se encontró ningún contacto con esos datos");
     }
 
     private boolean estaVacio(String texto) {

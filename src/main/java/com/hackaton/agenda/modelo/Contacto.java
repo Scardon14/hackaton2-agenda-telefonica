@@ -9,9 +9,9 @@ public class Contacto {
     private String apellido;
     private String telefono;
 
-    // Validación de teléfonos colombianos
+    // Validación de teléfonos +34
     public static final String REGEX_TELEFONO =
-            "^(\\+57[\\s-]?)?([1-9]\\d{2}[\\s-]?\\d{3}[\\s-]?\\d{4}|[1-9]\\d{9})$";
+            "^(\\+34[\\s-]?)?([6-9]\\d{2}[\\s-]?\\d{3}[\\s-]?\\d{3}|[6-9]\\d{8})$";
 
     private static final Pattern PATTERN_TELEFONO =
             Pattern.compile(REGEX_TELEFONO);
