@@ -3,21 +3,22 @@ package com.hackaton.agenda.modelo;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-/* Lógica de negocio de la agenda telefónica.
- * No importa nada de javax.swing: si algo sale mal, lanza una excepción
- * con un mensaje claro y el controlador decide cómo mostrarlo. */
 
+/*
+ * Lógica de negocio de la agenda telefónica.
+ * Maneja el almacenamiento de contactos, control de duplicados y cupos.
+ */
 public class Agenda {
+
     private static final int CAPACIDAD_POR_DEFECTO = 10;
 
     private final List<Contacto> contactos;
     private final int capacidadMaxima;
-    /** Agenda con capacidad predeterminada de 10 contactos. */
+
     public Agenda() {
         this(CAPACIDAD_POR_DEFECTO);
     }
 
-    /** Agenda con capacidad configurable. */
     public Agenda(int capacidadMaxima) {
         if (capacidadMaxima <= 0) {
             throw new IllegalArgumentException("La capacidad de la agenda debe ser mayor que cero");
@@ -26,7 +27,7 @@ public class Agenda {
         this.contactos = new ArrayList<>();
     }
 
-    /**
+    /*
      * Valida campos obligatorios, espacio disponible y duplicados antes de insertar.
      */
     public void añadirContacto(Contacto c) {
@@ -40,7 +41,7 @@ public class Agenda {
             throw new IllegalArgumentException("El apellido es obligatorio");
         }
         if (!Contacto.validarTelefono(c.getTelefono())) {
-            throw new IllegalArgumentException("Formato de teléfono inválido. Ej: +34 600 000 000 o 600000000");
+            throw new IllegalArgumentException("Formato de teléfono inválido. Ej: +57 300 123 4567 o 3001234567");
         }
         if (agendaLlena()) {
             throw new IllegalArgumentException("La agenda está llena (máximo " + capacidadMaxima + " contactos)");
@@ -52,46 +53,39 @@ public class Agenda {
         contactos.add(c);
     }
 
-    /** Alias de añadirContacto, por si el equipo prefiere este nombre. */
     public void agregarContacto(Contacto c) {
         añadirContacto(c);
     }
 
-    /** true si ya hay un contacto con el mismo nombre y apellido (usa equals de Contacto). */
     public boolean existeContacto(Contacto c) {
         return c != null && contactos.contains(c);
     }
 
-    /**
-     * Devuelve una COPIA de los contactos ordenada alfabéticamente
-     * por nombre y luego por apellido, sin distinguir mayúsculas.
-     * Es una copia para que nadie pueda modificar la lista interna (encapsulamiento).
+    /*
+     * Devuelve una copia ordenada alfabéticamente por apellido y luego por nombre.
      */
     public List<Contacto> listarContactos() {
         List<Contacto> copia = new ArrayList<>(contactos);
         copia.sort(Comparator
-                .comparing(Contacto::getNombre, String.CASE_INSENSITIVE_ORDER)
-                .thenComparing(Contacto::getApellido, String.CASE_INSENSITIVE_ORDER));
+                .comparing(Contacto::getApellido, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(Contacto::getNombre, String.CASE_INSENSITIVE_ORDER));
         return copia;
     }
 
-    /** Devuelve el teléfono del contacto o lanza excepción si no existe. */
     public String buscarContacto(String nombre, String apellido) {
         return obtenerContacto(nombre, apellido).getTelefono();
     }
 
-    /** Elimina el contacto si existe; si no, lanza excepción. */
     public void eliminarContacto(Contacto c) {
         if (c == null || !contactos.remove(c)) {
             throw new IllegalArgumentException("No se encontró el contacto a eliminar");
         }
     }
 
-    /** Cambia el teléfono de un contacto existente, previa validación con Regex. */
     public void modificarTelefono(String nombre, String apellido, String nuevoTelefono) {
         Contacto c = obtenerContacto(nombre, apellido);
         if (!Contacto.validarTelefono(nuevoTelefono)) {
-            throw new IllegalArgumentException("Formato de teléfono inválido. Ej: +34 600 000 000 o 600000000");
+            throw new IllegalArgumentException("Formato de teléfono inválido. Ej: +57 300 123 4567 o 3001234567");
         }
         c.setTelefono(nuevoTelefono.trim());
     }
@@ -101,18 +95,18 @@ public class Agenda {
     }
 
     public int espaciosLibres() {
-        return capacidadMaxima - contactos.size();
+        return Math.max(0, capacidadMaxima - contactos.size());
+    }
+
+    public int getCantidadContactos() {
+        return contactos.size();
     }
 
     public int getCapacidadMaxima() {
         return capacidadMaxima;
     }
 
-    // ----------------- Métodos privados de apoyo -----------------
-
-    /* Busca recorriendo la lista y comparando sin mayúsculas.     */
-
-    private Contacto obtenerContacto(String nombre, String apellido) {
+    public Contacto obtenerContacto(String nombre, String apellido) {
         if (estaVacio(nombre) || estaVacio(apellido)) {
             throw new IllegalArgumentException("Escribe nombre y apellido para buscar");
         }
@@ -126,8 +120,6 @@ public class Agenda {
     }
 
     private boolean estaVacio(String texto) {
-        return texto == null || texto.isBlank();
+        return texto == null || texto.trim().isEmpty();
     }
-
 }
-

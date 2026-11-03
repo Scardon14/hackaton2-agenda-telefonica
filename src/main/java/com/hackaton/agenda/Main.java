@@ -16,9 +16,7 @@ public class Main {
             }
 
             Agenda agendaModelo = new Agenda(10);
-
             VentanaPrincipal vista = new VentanaPrincipal();
-
             new AgendaControlador(agendaModelo, vista);
 
             vista.setVisible(true);
