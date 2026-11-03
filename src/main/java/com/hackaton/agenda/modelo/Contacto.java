@@ -1,4 +1,3 @@
-
 package com.hackaton.agenda.modelo;
 
 import java.util.Objects;
@@ -25,18 +24,6 @@ public class Contacto {
         setApellido(apellido);
         setTelefono(telefono);
     }
-    // Obtener apellido
-    public String getApellido() {
-        return apellido;
-    }
-
-    // Modificar apellido
-    public void setApellido(String apellido) {
-        if (apellido == null || apellido.trim().isEmpty()) {
-            throw new IllegalArgumentException("El apellido no puede estar vacío");
-        }
-        this.apellido = apellido.trim();
-    }
 
     public String getNombre() {
         return nombre;
@@ -49,9 +36,16 @@ public class Contacto {
         this.nombre = nombre.trim();
     }
 
+    public String getApellido() {
+        return apellido;
+    }
 
-
-
+    public void setApellido(String apellido) {
+        if (apellido == null || apellido.trim().isEmpty()) {
+            throw new IllegalArgumentException("El apellido no puede estar vacío");
+        }
+        this.apellido = apellido.trim();
+    }
 
     public String getTelefono() {
         return telefono;
@@ -96,4 +90,3 @@ public class Contacto {
         return nombre + " " + apellido + " - " + telefono;
     }
 }
-
