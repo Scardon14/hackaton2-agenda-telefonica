@@ -39,6 +39,9 @@ public class Agenda {
         if (estaVacio(c.getApellido())) {
             throw new IllegalArgumentException("El apellido es obligatorio");
         }
+        if (!Contacto.validarTelefono(c.getTelefono())) {
+            throw new IllegalArgumentException("Formato de teléfono inválido. Ej: +34 600 000 000 o 600000000");
+        }
         if (agendaLlena()) {
             throw new IllegalArgumentException("La agenda está llena (máximo " + capacidadMaxima + " contactos)");
         }

@@ -1,8 +1,6 @@
 package com.hackaton.agenda.modelo;
 
 
-package com.hackaton.agenda.modelo;
-
 public class Contacto {
 
     // Atributos
