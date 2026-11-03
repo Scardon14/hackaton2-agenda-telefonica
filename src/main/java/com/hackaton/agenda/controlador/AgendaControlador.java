@@ -4,11 +4,14 @@ import com.hackaton.agenda.modelo.Agenda;
 import com.hackaton.agenda.modelo.Contacto;
 import com.hackaton.agenda.vista.VentanaPrincipal;
 
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+/*
+ * Conecta las acciones del usuario en la pantalla con los métodos de la agenda.
+ */
 public class AgendaControlador {
+
     private final Agenda agenda;
     private final VentanaPrincipal vista;
 
@@ -19,8 +22,6 @@ public class AgendaControlador {
         refrescarTabla();
         vista.mostrarMensajeExito("Agenda lista. Espacios libres: " + agenda.espaciosLibres());
     }
-
-    // ----------------- Registro de listeners -----------------
 
     private void registrarEventos() {
         vista.getBtnAgregar().addActionListener(e -> ejecutar(this::agregar));
@@ -33,6 +34,13 @@ public class AgendaControlador {
             vista.mostrarMensajeExito("Formulario limpio");
         });
 
+        if (vista.getBtnMostrarTodos() != null) {
+            vista.getBtnMostrarTodos().addActionListener(e -> {
+                refrescarTabla();
+                vista.mostrarMensajeExito("Mostrando todos los contactos");
+            });
+        }
+
         // Sincronización: al seleccionar una fila, se rellenan los campos
         vista.getTabla().getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -41,12 +49,9 @@ public class AgendaControlador {
         });
     }
 
-    // ----------------- Acciones de cada botón -----------------
-
     private void agregar() {
-        // El constructor de Contacto valida campos vacíos y el teléfono (Regex)
         Contacto nuevo = new Contacto(vista.getNombre(), vista.getApellido(), vista.getTelefono());
-        agenda.añadirContacto(nuevo);   // valida agenda llena y duplicados
+        agenda.añadirContacto(nuevo);
         refrescarTabla();
         vista.limpiarFormulario();
         vista.mostrarMensajeExito("Contacto agregado. Espacios libres: " + agenda.espaciosLibres());
@@ -55,6 +60,7 @@ public class AgendaControlador {
     private void buscar() {
         String telefono = agenda.buscarContacto(vista.getNombre(), vista.getApellido());
         vista.setTelefono(telefono);
+        vista.mostrarContactoEncontrado(vista.getNombre(), vista.getApellido(), telefono);
         vista.mostrarMensajeExito("Teléfono encontrado: " + telefono);
     }
 
@@ -67,7 +73,11 @@ public class AgendaControlador {
     private void eliminar() {
         String nombre = vista.getNombre();
         String apellido = vista.getApellido();
-        // Se obtiene el teléfono real para construir un Contacto válido
+
+        if (nombre.trim().isEmpty() || apellido.trim().isEmpty()) {
+            throw new IllegalArgumentException("Selecciona un contacto en la tabla para eliminarlo.");
+        }
+
         String telefono = agenda.buscarContacto(nombre, apellido);
 
         int respuesta = JOptionPane.showConfirmDialog(vista,
@@ -84,12 +94,6 @@ public class AgendaControlador {
         vista.mostrarMensajeExito("Contacto eliminado. Espacios libres: " + agenda.espaciosLibres());
     }
 
-    // ----------------- Apoyo -----------------
-
-    /**
-     * Ejecuta una acción y convierte cualquier error en un mensaje rojo,
-     * para que nunca aparezcan excepciones en la consola.
-     */
     private void ejecutar(Runnable accion) {
         try {
             accion.run();
@@ -100,16 +104,15 @@ public class AgendaControlador {
         }
     }
 
-    /** Vacía la tabla y la vuelve a llenar con la lista ordenada del modelo. */
     private void refrescarTabla() {
         DefaultTableModel modelo = vista.getModeloTabla();
         modelo.setRowCount(0);
         for (Contacto c : agenda.listarContactos()) {
             modelo.addRow(new Object[]{c.getNombre(), c.getApellido(), c.getTelefono()});
         }
+        vista.actualizarCapacidad(agenda.getCantidadContactos(), agenda.getCapacidadMaxima(), agenda.espaciosLibres());
     }
 
-    /** Copia la fila seleccionada de la tabla a los campos del formulario. */
     private void cargarFilaSeleccionada() {
         JTable tabla = vista.getTabla();
         int fila = tabla.getSelectedRow();
