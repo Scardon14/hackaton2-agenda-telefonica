@@ -1,7 +1,7 @@
-package com.hackaton.agenda.modelo;
-
 
 package com.hackaton.agenda.modelo;
+
+import java.util.Objects;
 
 public class Contacto {
 
@@ -50,7 +50,7 @@ public class Contacto {
         return telefono;
     }
 
-    // Setter del teléfono (para modificarTelefono)
+    // Setter del teléfono
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
@@ -59,6 +59,36 @@ public class Contacto {
     public static boolean validarTelefono(String telefono) {
         return telefono != null &&
                 telefono.trim().matches(REGEX_TELEFONO);
+    }
+
+    // Dos contactos son iguales si tienen el mismo nombre y apellido
+    @Override
+    public boolean equals(Object objeto) {
+        if (this == objeto) return true;
+        if (!(objeto instanceof Contacto)) return false;
+
+        Contacto otro = (Contacto) objeto;
+
+        return Objects.equals(
+                nombre == null ? null : nombre.trim().toLowerCase(),
+                otro.nombre == null ? null : otro.nombre.trim().toLowerCase()
+        ) && Objects.equals(
+                apellido == null ? null : apellido.trim().toLowerCase(),
+                otro.apellido == null ? null : otro.apellido.trim().toLowerCase()
+        );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                nombre == null ? null : nombre.trim().toLowerCase(),
+                apellido == null ? null : apellido.trim().toLowerCase()
+        );
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " " + apellido + " - " + telefono;
     }
 }
 
